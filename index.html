@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mèo Thần Tài - Xúc Xắc May Mắn</title>
+<meta name="theme-color" content="#7a0c14">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg-glow"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <h1>Mèo Thần Tài <span>招財貓</span></h1>
+  <div class="tools">
+    <button class="icon-btn" id="btnHistory" title="Lịch sử" aria-label="Lịch sử">📜</button>
+    <button class="icon-btn" id="btnSound" title="Âm thanh" aria-label="Bật/tắt âm thanh">🔊</button>
+  </div>
+</header>
+
+<!-- HOME -->
+<main id="home" class="screen active">
+  <div class="cat-wrap">
+    <svg class="cat" viewBox="0 0 240 280" role="img" aria-label="Mèo thần tài">
+      <defs>
+        <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#ffe27a"/><stop offset=".5" stop-color="#f5b81c"/><stop offset="1" stop-color="#c98a00"/>
+        </linearGradient>
+        <linearGradient id="fur" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fffdf6"/><stop offset="1" stop-color="#f1e4c9"/>
+        </linearGradient>
+      </defs>
+      <!-- body -->
+      <path d="M60 280 C40 200 60 140 120 140 C180 140 200 200 180 280 Z" fill="url(#fur)" stroke="#caa86a" stroke-width="3"/>
+      <!-- tail -->
+      <path d="M185 250 C230 245 235 190 205 180" fill="none" stroke="#caa86a" stroke-width="12" stroke-linecap="round"/>
+      <path d="M185 250 C230 245 235 190 205 180" fill="none" stroke="#fffdf6" stroke-width="7" stroke-linecap="round"/>
+      <!-- coin on belly -->
+      <g class="koban">
+        <ellipse cx="120" cy="225" rx="34" ry="44" fill="url(#gold)" stroke="#9a6a00" stroke-width="3"/>
+        <ellipse cx="120" cy="225" rx="27" ry="37" fill="none" stroke="#9a6a00" stroke-width="1.5" opacity=".6"/>
+        <text x="120" y="222" text-anchor="middle" font-size="20" font-weight="800" fill="#7a0c14" font-family="serif">千万</text>
+        <text x="120" y="244" text-anchor="middle" font-size="20" font-weight="800" fill="#7a0c14" font-family="serif">両</text>
+      </g>
+      <!-- left paw -->
+      <ellipse cx="78" cy="185" rx="16" ry="22" fill="url(#fur)" stroke="#caa86a" stroke-width="3"/>
+      <!-- waving paw -->
+      <g class="paw">
+        <path d="M168 170 C190 150 192 110 180 82" fill="none" stroke="#caa86a" stroke-width="30" stroke-linecap="round"/>
+        <path d="M168 170 C190 150 192 110 180 82" fill="none" stroke="url(#fur)" stroke-width="24" stroke-linecap="round"/>
+        <circle cx="180" cy="76" r="17" fill="url(#fur)" stroke="#caa86a" stroke-width="3"/>
+        <circle cx="180" cy="80" r="6" fill="#f4a3a3"/>
+        <circle cx="172" cy="68" r="3" fill="#f4a3a3"/><circle cx="180" cy="65" r="3" fill="#f4a3a3"/><circle cx="188" cy="68" r="3" fill="#f4a3a3"/>
+      </g>
+      <!-- collar & bell -->
+      <path d="M78 140 Q120 160 162 140" fill="none" stroke="#c8102e" stroke-width="10" stroke-linecap="round"/>
+      <circle cx="120" cy="156" r="10" fill="url(#gold)" stroke="#9a6a00" stroke-width="2"/>
+      <path d="M115 158 h10" stroke="#9a6a00" stroke-width="2"/>
+      <!-- ears -->
+      <path d="M62 72 L58 22 L100 48 Z" fill="url(#fur)" stroke="#caa86a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M68 62 L66 36 L88 50 Z" fill="#f4a3a3"/>
+      <path d="M178 72 L182 22 L140 48 Z" fill="url(#fur)" stroke="#caa86a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M172 62 L174 36 L152 50 Z" fill="#f4a3a3"/>
+      <!-- head -->
+      <ellipse cx="120" cy="88" rx="68" ry="58" fill="url(#fur)" stroke="#caa86a" stroke-width="3"/>
+      <!-- patches -->
+      <path d="M98 36 q22 -10 44 0 q-8 18 -22 18 q-14 0 -22 -18z" fill="#f0a23a" opacity=".85"/>
+      <!-- eyes -->
+      <path d="M82 88 q10 -12 20 0" fill="none" stroke="#3b2418" stroke-width="4" stroke-linecap="round"/>
+      <path d="M138 88 q10 -12 20 0" fill="none" stroke="#3b2418" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="78" cy="106" rx="9" ry="6" fill="#f7a8a8" opacity=".7"/>
+      <ellipse cx="162" cy="106" rx="9" ry="6" fill="#f7a8a8" opacity=".7"/>
+      <!-- nose, mouth -->
+      <path d="M115 100 h10 l-5 6 z" fill="#e66a7a"/>
+      <path d="M120 106 v4 M120 110 q-8 8 -16 2 M120 110 q8 8 16 2" fill="none" stroke="#3b2418" stroke-width="2.5" stroke-linecap="round"/>
+      <!-- whiskers -->
+      <path d="M60 98 l-24 -6 M60 106 l-26 2 M180 98 l24 -6 M180 106 l26 2" stroke="#caa86a" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  </div>
+
+  <p class="tagline">Lắc xúc xắc, rước <b id="cntLabel">12</b> từ may mắn về nhà 🧧</p>
+
+  <button class="dice-btn" id="rollBtn" aria-label="Gieo xúc xắc">
+    <div class="die small" id="homeDie"><!-- faces injected --></div>
+    <span>GIEO XÚC XẮC</span>
+  </button>
+
+  <div class="settings">
+    <label>Số từ
+      <select id="selCount">
+        <option>6</option><option selected>12</option><option>18</option><option>24</option>
+      </select>
+    </label>
+    <label class="chk"><input type="checkbox" id="chkNum" checked> Hiện số thứ tự</label>
+  </div>
+</main>
+
+<!-- ROLLING -->
+<section id="rolling" class="screen">
+  <div class="stage">
+    <div class="shadow"></div>
+    <div class="die big" id="bigDie"></div>
+  </div>
+  <p class="rolling-text" id="rollText">Đang gieo…</p>
+</section>
+
+<!-- COINS -->
+<section id="coins" class="screen">
+  <div class="coin-msg">
+    <div class="huge">發財</div>
+    <p>Tài lộc đang bay về…</p>
+    <button class="link" id="skipBtn">Bỏ qua ›</button>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section id="result" class="screen">
+  <h2>🧧 Kết quả may mắn 🧧</h2>
+  <p class="hint">Bấm 🔒 để giữ lại từ ưa thích, bấm ↻ để đổi riêng từ đó.</p>
+  <ol id="grid" class="grid"></ol>
+  <div class="actions">
+    <button class="btn primary" id="btnReroll">🎲 Gieo lại (giữ từ đã khóa)</button>
+    <button class="btn" id="btnCopy">📋 Sao chép</button>
+    <button class="btn" id="btnDownload">⬇ Tải .txt</button>
+    <button class="btn ghost" id="btnBack">← Về trang chính</button>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<aside id="drawer" class="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <h3>Lịch sử gieo</h3>
+    <button class="icon-btn" id="closeHistory" aria-label="Đóng">✕</button>
+  </div>
+  <ul id="historyList"></ul>
+  <button class="btn ghost" id="clearHistory">Xóa lịch sử</button>
+</aside>
+<div id="scrim" class="scrim"></div>
+<div id="toast" class="toast"></div>
+
+<script src="words.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
