@@ -37,6 +37,21 @@ body{
 .tagline{margin:14px 0 20px;font-size:1.05rem;opacity:.95}
 .tagline b{color:var(--gold-lt)}
 
+/* modes */
+.modes{display:flex;gap:6px;background:rgba(0,0,0,.3);padding:4px;border-radius:999px;border:1px solid rgba(245,184,28,.4)}
+.mode{background:none;border:0;color:var(--cream);padding:8px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:.9rem}
+.mode.active{background:linear-gradient(180deg,var(--gold-lt),var(--gold));color:var(--deep)}
+.modes + .tagline{margin-top:14px}
+
+/* bip39 details */
+.bip{width:min(900px,100%);margin-top:18px;text-align:left;background:rgba(0,0,0,.28);border:1px solid rgba(245,184,28,.4);border-radius:14px;padding:14px}
+.bip[hidden]{display:none}
+.bip .warn{background:rgba(245,184,28,.18);border-radius:10px;padding:8px 12px;font-size:.85rem;margin-bottom:10px}
+.bip dt{font-size:.75rem;opacity:.7;margin-top:8px}
+.bip dd{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem;word-break:break-all;color:var(--gold-lt)}
+.bipmode .card .ctl{display:none}
+.bipmode .card{padding-top:26px}
+
 /* dice button */
 .dice-btn{display:flex;flex-direction:column;align-items:center;gap:18px;background:none;border:0;color:var(--gold-lt);
   font-weight:800;letter-spacing:2px;font-size:1rem;cursor:pointer;padding:12px 28px;border-radius:24px;
