@@ -79,7 +79,11 @@
     </svg>
   </div>
 
-  <p class="tagline">Lắc xúc xắc, rước <b id="cntLabel">12</b> từ may mắn về nhà 🧧</p>
+  <div class="modes" role="tablist" aria-label="Chế độ">
+    <button class="mode active" id="modeRandom" role="tab" aria-selected="true">🎲 Từ ngẫu nhiên</button>
+    <button class="mode" id="modeBip" role="tab" aria-selected="false">🔐 Mnemonic BIP-39</button>
+  </div>
+  <p class="tagline" id="tagline">Lắc xúc xắc, rước <b id="cntLabel">12</b> từ may mắn về nhà 🧧</p>
 
   <button class="dice-btn" id="rollBtn" aria-label="Gieo xúc xắc">
     <div class="die small" id="homeDie"><!-- faces injected --></div>
@@ -117,8 +121,16 @@
 <!-- RESULT -->
 <section id="result" class="screen">
   <h2>🧧 Kết quả may mắn 🧧</h2>
-  <p class="hint">Bấm 🔒 để giữ lại từ ưa thích, bấm ↻ để đổi riêng từ đó.</p>
+  <p class="hint" id="hint">Bấm 🔒 để giữ lại từ ưa thích, bấm ↻ để đổi riêng từ đó.</p>
   <ol id="grid" class="grid"></ol>
+  <div id="bip" class="bip" hidden>
+    <div class="warn">⚠️ Chỉ để học/thử nghiệm. Đừng dùng cụm từ sinh trên trang web để cất tiền thật; kết quả này không được lưu vào lịch sử.</div>
+    <dl>
+      <dt>Entropy (128 bit)</dt><dd id="bipEntropy"></dd>
+      <dt>Checksum (4 bit đầu của SHA-256)</dt><dd id="bipChecksum"></dd>
+      <dt>Chỉ số từ (11 bit mỗi nhóm)</dt><dd id="bipIdx"></dd>
+    </dl>
+  </div>
   <div class="actions">
     <button class="btn primary" id="btnReroll">🎲 Gieo lại (giữ từ đã khóa)</button>
     <button class="btn" id="btnCopy">📋 Sao chép</button>
@@ -140,6 +152,7 @@
 <div id="toast" class="toast"></div>
 
 <script src="words.js"></script>
+<script src="bip39.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

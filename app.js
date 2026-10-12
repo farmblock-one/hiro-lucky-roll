@@ -5,7 +5,7 @@
   const PIPS = { 1:[4], 2:[0,8], 3:[0,4,8], 4:[0,2,6,8], 5:[0,2,4,6,8], 6:[0,2,3,5,6,8] };
   const HISTORY_KEY = 'mtt.history', PREF_KEY = 'mtt.prefs';
 
-  const state = { words: [], locked: new Set(), busy: false, history: [], prefs: { count: 12, sound: true, nums: true } };
+  const state = { words: [], locked: new Set(), busy: false, history: [], bip: null, prefs: { count: 12, sound: true, nums: true, mode: 'random' } };
 
   /* ---------- storage ---------- */
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } };
@@ -121,13 +121,21 @@
     if (state.busy) return;
     state.busy = true;
     try { audio().resume(); } catch {}
-    const n = state.prefs.count;
-    // keep locked words (only those still within range)
-    const keep = new Map([...state.locked].filter((i) => i < n && state.words[i]).map((i) => [i, state.words[i]]));
-    const fresh = pickUnique(n - keep.size, new Set(keep.values()));
-    const next = []; let f = 0;
-    for (let i = 0; i < n; i++) next.push(keep.has(i) ? keep.get(i) : fresh[f++]);
-    state.locked = new Set(keep.keys());
+    const bipMode = state.prefs.mode === 'bip';
+    let next, bip = null;
+    if (bipMode) {
+      try { bip = await Bip39.generate(WORDS); }
+      catch (e) { toast(e.message); state.busy = false; return; }
+      next = bip.words; state.locked = new Set();
+    } else {
+      const n = state.prefs.count;
+      // keep locked words (only those still within range)
+      const keep = new Map([...state.locked].filter((i) => i < n && state.words[i]).map((i) => [i, state.words[i]]));
+      const fresh = pickUnique(n - keep.size, new Set(keep.values()));
+      next = []; let f = 0;
+      for (let i = 0; i < n; i++) next.push(keep.has(i) ? keep.get(i) : fresh[f++]);
+      state.locked = new Set(keep.keys());
+    }
 
     if (!reduced) {
       show('rolling');
@@ -139,9 +147,9 @@
       await Promise.race([sleep(3000), new Promise((r) => (skip = r))]);
       skip = null; stopRain();
     }
-    state.words = next;
+    state.words = next; state.bip = bip;
     render(true); sfx('win');
-    pushHistory(next);
+    if (!bipMode) pushHistory(next);   // never persist seed-phrase results
     show('result');
     state.busy = false;
   }
@@ -150,6 +158,16 @@
   function render(animate) {
     const g = $('grid');
     g.classList.toggle('numoff', !state.prefs.nums);
+    const isBip = !!state.bip;
+    g.classList.toggle('bipmode', isBip);
+    $('bip').hidden = !isBip;
+    $('hint').hidden = isBip;
+    $('btnReroll').textContent = isBip ? '🎲 Sinh mnemonic mới' : '🎲 Gieo lại (giữ từ đã khóa)';
+    if (isBip) {
+      $('bipEntropy').textContent = state.bip.entropyHex;
+      $('bipChecksum').textContent = state.bip.checksumBits;
+      $('bipIdx').textContent = state.bip.indices.join(' ');
+    }
     g.innerHTML = '';
     state.words.forEach((w, i) => {
       const li = document.createElement('li');
@@ -188,7 +206,7 @@
       const p = document.createElement('div'); p.textContent = h.words.join(' · ');
       li.append(tm, p);
       li.title = 'Bấm để xem lại';
-      li.onclick = () => { state.words = [...h.words]; state.locked = new Set(); render(false); toggleDrawer(false); show('result'); };
+      li.onclick = () => { state.words = [...h.words]; state.bip = null; state.locked = new Set(); render(false); toggleDrawer(false); show('result'); };
       ul.appendChild(li);
     });
   }
@@ -212,10 +230,19 @@
 
   /* ---------- wire up ---------- */
   function syncPrefs() {
-    $('selCount').value = state.prefs.count; $('cntLabel').textContent = state.prefs.count;
+    const bip = state.prefs.mode === 'bip';
+    $('modeRandom').classList.toggle('active', !bip); $('modeBip').classList.toggle('active', bip);
+    $('modeRandom').setAttribute('aria-selected', String(!bip)); $('modeBip').setAttribute('aria-selected', String(bip));
+    $('selCount').disabled = bip;
+    $('tagline').innerHTML = bip
+      ? 'Sinh cụm <b>12 từ BIP-39</b> (128 bit entropy + checksum) 🔐'
+      : 'Lắc xúc xắc, rước <b id="cntLabel">12</b> từ may mắn về nhà 🧧';
+    $('selCount').value = state.prefs.count; if ($('cntLabel')) $('cntLabel').textContent = state.prefs.count;
     $('chkNum').checked = state.prefs.nums; $('btnSound').textContent = state.prefs.sound ? '🔊' : '🔇';
     save(PREF_KEY, state.prefs);
   }
+  $('modeRandom').onclick = () => { state.prefs.mode = 'random'; syncPrefs(); };
+  $('modeBip').onclick = () => { state.prefs.mode = 'bip'; syncPrefs(); };
   $('rollBtn').onclick = roll;
   $('btnReroll').onclick = roll;
   $('skipBtn').onclick = () => skip && skip();
